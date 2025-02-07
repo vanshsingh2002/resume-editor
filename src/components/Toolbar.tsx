@@ -1,7 +1,7 @@
 "use client";
 import { List, Bold, Italic, Underline, ListOrdered } from "lucide-react";
 import { Editor } from "@tiptap/react";
-import Toggle from "./Toggle"; // Ensure the correct import path
+import Toggle from "./Toggle";
 
 export default function ToolBar({ editor }: { editor: Editor }) {
   if (!editor) return null;
@@ -18,7 +18,7 @@ export default function ToolBar({ editor }: { editor: Editor }) {
       pressed: editor.isActive("italic"),
     },
     {
-      icon: <Underline className="size-4" />, // Added underline button
+      icon: <Underline className="size-4" />,
       onClick: () => editor.chain().focus().toggleUnderline().run(),
       pressed: editor.isActive("underline"),
     },

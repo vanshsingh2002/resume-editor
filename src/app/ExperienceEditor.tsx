@@ -105,31 +105,36 @@ export default function ExperienceEditor() {
     );
   };
 
-  // Function to handle JSON download with correct format
+
 const downloadjson = () => {
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
   const formattedExperiences = experiences.map((exp) => ({
     name: exp.company,
     location: `${exp.location}, ${exp.country}`,
     description: exp.description
-      ? exp.description.replace(/<\/?[^>]+(>|$)/g, "").split("\n") // Convert HTML to text and split into array
+      ? exp.description
+          .match(/<p>(.*?)<\/p>/g) 
+          ?.map((p) => p.replace(/<\/?p>/g, "").trim()) 
+          .filter((line) => line.length > 0) || []
       : [],
     position: exp.jobTitle,
-    startDate: exp.startDate ? new Date(exp.startDate).getFullYear().toString() : "",
+    startDate: exp.startDate ? `${new Date(exp.startDate).getFullYear()} ${monthNames[new Date(exp.startDate).getMonth()]}` : "",
     endDate: exp.currentlyWorking
       ? "Present"
       : exp.endDate
-      ? new Date(exp.endDate).getFullYear().toString()
+      ?`${new Date(exp.endDate).getFullYear()} ${monthNames[new Date(exp.endDate).getMonth()]}`
       : "",
   }));
 
-  const jsonString = JSON.stringify(formattedExperiences, null, 2); // Pretty-print JSON
+  const jsonString = JSON.stringify(formattedExperiences, null, 2); 
   const blob = new Blob([jsonString], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "experiences.json"; // File name
+  a.download = "experiences.json"; 
   a.click();
-  URL.revokeObjectURL(url); // Clean up
+  URL.revokeObjectURL(url); 
 };
 
 
@@ -247,6 +252,7 @@ const downloadjson = () => {
                       <DatePicker
                         picker="month"
                         placeholder="Start Date"
+                        disabledDate={(current) => current && current.isAfter(new Date())}
                         onChange={(date) =>
                           updateExperience(
                             exp.id,
@@ -254,11 +260,12 @@ const downloadjson = () => {
                             date ? date.toDate() : null
                           )
                         }
-                      />
+                        />
                       <DatePicker
                         picker="month"
                         placeholder="End Date"
                         disabled={exp.currentlyWorking}
+                        disabledDate={(current) => current && current.isAfter(new Date())}
                         onChange={(date) =>
                           updateExperience(
                             exp.id,
@@ -301,7 +308,7 @@ const downloadjson = () => {
               <Plus className="w-5 h-5 mr-2" /> Add Experience
             </Button>
             <Button
-              onClick={downloadjson} // Call the download function
+              onClick={downloadjson}
               className="w-full flex items-center justify-center py-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
             >
               <Download className="w-5 h-5 mr-2" /> Download JSON

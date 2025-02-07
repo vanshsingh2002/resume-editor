@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/Button"; // Ensure this path matches your project structure
+import { Button } from "@/components/Button";
 
 interface ToggleProps {
   pressed: boolean;

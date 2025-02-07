@@ -5,7 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import ToolBar from "./Toolbar";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
-import Underline from "@tiptap/extension-underline"; // ✅ Import Underline
+import Underline from "@tiptap/extension-underline";
 
 interface RichTextEditorProps {
   content: string;
